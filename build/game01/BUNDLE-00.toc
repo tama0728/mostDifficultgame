@@ -1,0 +1,3 @@
+([('game01',
+   '/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/dist/game01',
+   'EXECUTABLE')],)
