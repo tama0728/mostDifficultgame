@@ -11,7 +11,7 @@ class Character(py.sprite.Sprite):
     def __init__(self):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "sumong.png").convert_alpha()
-        self.image = py.transform.scale(self.image, (55, 55))
+        self.image = py.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = round(SCREEN_WIDTH / 2)
         self.rect.y = round(SCREEN_HEIGHT / 2)
@@ -21,7 +21,7 @@ class Character(py.sprite.Sprite):
 
 
 class Obstacle(py.sprite.Sprite):
-    def __init__(self, x, y, speed, degrees=0, r=0, maxx=1280, minx=0, maxy = 720, miny = 0):
+    def __init__(self, x, y, speed, degrees=0, r=0, k=0, maxx=1280, minx=0, maxy = 720, miny = 0):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "circle_red.png").convert_alpha()
         self.image = py.transform.scale(self.image, (20, 20))
@@ -33,7 +33,7 @@ class Obstacle(py.sprite.Sprite):
         self.speed = speed
         self.degrees = degrees
         self.r = r
-        self.k = 0
+        self.k = k
         self.maxx = maxx
         self.maxy = maxy
         self.minx = minx
@@ -66,6 +66,9 @@ class Round(py.sprite.Sprite):
         py.sprite.Sprite.__init__(self)
         self.step = 1
         self.bool = True
+        self.image = py.image.load(url + "coin.png").convert_alpha()
+        self.image = py.transform.scale(self.image, (50, 50))
+        self.rect = self.image.get_rect()
 
     def round01(self):
         py.sprite.Sprite.__init__(self)
@@ -74,22 +77,22 @@ class Round(py.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = round(SCREEN_WIDTH / 2)
         self.rect.centery = round(SCREEN_HEIGHT / 2)
-        obs01 = Obstacle(250, 380, -8, 100, 0, 1280, 0, 450, 310)
-        obs02 = Obstacle(170, 380, -8, 100, 0, 1280, 0, 450, 310)
-        obs03 = Obstacle(290, 380,  8, 100, 0, 1280, 0, 450, 310)
-        obs04 = Obstacle(210, 380,  8, 100, 0, 1280, 0, 450, 310)
-        obs05 = Obstacle(330, 380, -8, 100, 0, 1280, 0, 450, 310)
-        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2, 0, 0, 200)
-        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2, 0, 0, 100)
-        obs08 = Obstacle(250, 565, 3, -2, 0, 400, 250)
-        self.obs = [obs01, obs02, obs03, obs04, obs05]
+        self.obs = []
+        for i in range(0, 5, 1):
+            self.obs.append(Obstacle(170+i*40, 380, 8*(-1)**i, 100, 0, 0, 1280, 0, 450, 310))
+
         self.obsC = []
+        for i in range(0, 4, 1):
+            for j in range(0, 4, 1):
+                self.obsC.append(Obstacle(470, 140+i*140, 3, 0, 50, j*90))
         self.size = (110, 110)
         self.loc = (1080, 255)
         character.startx = 100
         character.starty = 360
         character.rect.x = 100
         character.rect.y = 360
+        self.coin = 6
+        self.get_coin = 0
 
     def round02(self):
         py.sprite.Sprite.__init__(self)
@@ -177,6 +180,11 @@ class Endpoint(py.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
+def display_death(back):
+    death = font.render(f"Death : {character.death:,}", True, True)
+    screen.blit(death, (5, 5))
+
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
@@ -187,9 +195,11 @@ y = False
 k = 0
 
 py.init()
-font = py.font.SysFont("arial", 30)
+font = py.font.SysFont("arial", 25)
 py.display.set_caption("1")
 screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+white_image = py.image.load(url+"white.png").convert_alpha()
+white_image = py.transform.scale(white_image, (250, 50))
 
 character = Character()
 clock = py.time.Clock()
@@ -250,6 +260,5 @@ while True:
 
     endpoint.update()
     screen.blit(character.image, character.rect)
-    death = font.render(f"Death : {character.death:,}", True, True)
-    screen.blit(death, (50, 20))
+    display_death(white_image)
     py.display.update()
