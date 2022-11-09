@@ -4,22 +4,24 @@ import math
 
 url = "/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/image/"
 
-
 # url = "F:/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/image/"
 
 
 class Character(py.sprite.Sprite):
     def __init__(self):
         py.sprite.Sprite.__init__(self)
-        self.image = py.image.load(url + "snoopy_spoon.png").convert_alpha()
-        self.image = py.transform.scale(self.image, (50, 50))
+        self.image = py.image.load(url + "sumong.png").convert_alpha()
+        self.image = py.transform.scale(self.image, (55, 55))
         self.rect = self.image.get_rect()
         self.rect.x = round(SCREEN_WIDTH / 2)
         self.rect.y = round(SCREEN_HEIGHT / 2)
+        self.startx = 0
+        self.starty = 0
+        self.death = 0
 
 
 class Obstacle(py.sprite.Sprite):
-    def __init__(self, x, y, speed):
+    def __init__(self, x, y, speed, degrees=0, r=0, maxx=1280, minx=0, maxy = 720, miny = 0):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "circle_red.png").convert_alpha()
         self.image = py.transform.scale(self.image, (20, 20))
@@ -29,21 +31,31 @@ class Obstacle(py.sprite.Sprite):
         self.centerx = x
         self.centery = y
         self.speed = speed
+        self.degrees = degrees
+        self.r = r
         self.k = 0
+        self.maxx = maxx
+        self.maxy = maxy
+        self.minx = minx
+        self.miny = miny
+        self.goal = 0
 
-    def updateLinear(self, direct, back):
-        if direct:
+    def updateLinear(self, back):
+        if self.degrees == 0:
             self.rect.x += self.speed
-            if py.sprite.collide_mask(self, back):
-                self.speed *= -1
-        else:
+        elif self.degrees >= 100:
             self.rect.y += self.speed
-            if py.sprite.collide_mask(self, back):
-                self.speed *= -1
+        else:
+            self.rect.x += self.speed
+            self.rect.y += self.speed * self.degrees
+        if py.sprite.collide_mask(self, back):
+            self.speed *= -1
+        if self.rect.x > self.maxx or self.rect.x < self.minx or self.rect.y > self.maxy or self.rect.y < self.miny:
+            self.speed *= -1
 
-    def updateObs(self, r):
-        self.rect.x = r * math.sin(math.radians(self.k)) + self.centerx
-        self.rect.y = r * math.cos(math.radians(self.k)) + self.centery
+    def updateCircle(self):
+        self.rect.x = self.r * math.sin(math.radians(self.k)) + self.centerx
+        self.rect.y = self.r * math.cos(math.radians(self.k)) + self.centery
         self.k += self.speed
         if self.k > 360:
             self.k = 0
@@ -58,56 +70,97 @@ class Round(py.sprite.Sprite):
     def round01(self):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "map01.png").convert_alpha()
+        self.color = py.image.load(url + "map01c.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.centerx = character.rect.x
-        self.rect.centery = character.rect.y
-        obs01 = Obstacle(300, 100, 5)
-        obs02 = Obstacle(500, 565, 5)
-        obs05 = Obstacle(250, 200, 5)
-        obs06 = Obstacle(SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 2, -2)
-        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2)
-        self.circlesY = [obs01, obs02]
-        self.circlesX = [obs05]
-        self.circlesC = [obs06, obs07]
+        self.rect.centerx = round(SCREEN_WIDTH / 2)
+        self.rect.centery = round(SCREEN_HEIGHT / 2)
+        obs01 = Obstacle(250, 380, -8, 100, 0, 1280, 0, 450, 310)
+        obs02 = Obstacle(170, 380, -8, 100, 0, 1280, 0, 450, 310)
+        obs03 = Obstacle(290, 380,  8, 100, 0, 1280, 0, 450, 310)
+        obs04 = Obstacle(210, 380,  8, 100, 0, 1280, 0, 450, 310)
+        obs05 = Obstacle(330, 380, -8, 100, 0, 1280, 0, 450, 310)
+        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2, 0, 0, 200)
+        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2, 0, 0, 100)
+        obs08 = Obstacle(250, 565, 3, -2, 0, 400, 250)
+        self.obs = [obs01, obs02, obs03, obs04, obs05]
+        self.obsC = []
         self.size = (110, 110)
-        self.loc = (1080, 250)
+        self.loc = (1080, 255)
+        character.startx = 100
+        character.starty = 360
+        character.rect.x = 100
+        character.rect.y = 360
 
     def round02(self):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "map02.png").convert_alpha()
+        self.color = py.image.load(url + "map02c.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.centerx = round(SCREEN_WIDTH / 2)
         self.rect.centery = round(SCREEN_HEIGHT / 2)
         obs01 = Obstacle(700, 100, 5)
-        obs02 = Obstacle(500, 565, 5)
+        obs02 = Obstacle(500, 565, 5, 100)
         obs05 = Obstacle(250, 200, 5)
-        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2)
-        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2)
-        self.circlesY = [obs01, obs02]
-        self.circlesX = [obs05]
-        self.circlesC = [obs06, obs07]
+        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2, 0, 200)
+        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2, 0, 200)
+        self.obs = [obs01, obs02, obs05]
+        self.obsC = [obs06, obs07]
         self.size = (110, 110)
         self.loc = (100, 250)
 
+    def round03(self):
+        py.sprite.Sprite.__init__(self)
+        self.image = py.image.load(url + "map03.png").convert_alpha()
+        self.color = py.image.load(url + "map03c.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.centerx = round(SCREEN_WIDTH / 2)
+        self.rect.centery = round(SCREEN_HEIGHT / 2)
+        obs01 = Obstacle(700, 100, 5)
+        obs02 = Obstacle(500, 565, 5, 100)
+        obs05 = Obstacle(250, 200, 5)
+        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2, 0, 200)
+        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2, 0, 200)
+        self.obs = [obs01, obs02, obs05]
+        self.obsC = [obs06, obs07]
+        self.size = (110, 110)
+        self.loc = (640, 150)
+
+    def round04(self):
+        py.sprite.Sprite.__init__(self)
+        self.image = py.image.load(url + "map04.png").convert_alpha()
+        self.color = py.image.load(url + "map04c.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.centerx = round(SCREEN_WIDTH / 2)
+        self.rect.centery = round(SCREEN_HEIGHT / 2)
+        obs01 = Obstacle(700, 100, 5)
+        obs02 = Obstacle(500, 565, 5, 100)
+        obs05 = Obstacle(250, 200, 5)
+        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2, 0, 200)
+        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2, 0, 200)
+        self.obs = [obs01, obs02, obs05]
+        self.obsC = [obs06, obs07]
+        self.size = (110, 110)
+        self.loc = (640, 150)
+
     def update(self, map):
-        for i in self.circlesY:
-            i.updateLinear(y, map)
 
-        for i in self.circlesX:
-            i.updateLinear(x, map)
+        for i in self.obs:
+            i.updateLinear(map)
 
-        for i in self.circlesC:
-            i.updateObs(200)
+        for i in self.obsC:
+            i.updateCircle()
 
-        for i in self.circlesX + self.circlesY + self.circlesC:
+        for i in self.obs + self.obsC:
             if py.sprite.collide_mask(i, character):
-                character.rect.x = round(SCREEN_WIDTH / 2)
-                character.rect.y = round(SCREEN_HEIGHT / 2)
+                character.rect.x = character.startx
+                character.rect.y = character.starty
+                character.death += 1
 
         screen.fill(white)
         screen.blit(self.image, (0, 0))
+        screen.blit(self.color, (0, 0))
 
-        for i in self.circlesY + self.circlesX + self.circlesC:
+        for i in self.obs + self.obsC:
             screen.blit(i.image, i.rect)
 
 
@@ -134,6 +187,7 @@ y = False
 k = 0
 
 py.init()
+font = py.font.SysFont("arial", 30)
 py.display.set_caption("1")
 screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -158,9 +212,19 @@ while True:
             endpoint = Endpoint(stage.size, stage.loc)
             stage.bool = False
 
+        elif stage.step == 3:
+            stage.round03()
+            endpoint = Endpoint(stage.size, stage.loc)
+            stage.bool = False
+
+        elif stage.step == 4:
+            stage.round04()
+            endpoint = Endpoint(stage.size, stage.loc)
+            stage.bool = False
+
     if py.sprite.collide_mask(character, endpoint):
-        character.rect.x = SCREEN_WIDTH/2
-        character.rect.y = SCREEN_HEIGHT/2
+        character.rect.x = SCREEN_WIDTH / 2
+        character.rect.y = SCREEN_HEIGHT / 2
         stage.step += 1
         stage.bool = True
 
@@ -186,5 +250,6 @@ while True:
 
     endpoint.update()
     screen.blit(character.image, character.rect)
-
+    death = font.render(f"Death : {character.death:,}", True, True)
+    screen.blit(death, (50, 20))
     py.display.update()
