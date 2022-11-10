@@ -1,10 +1,9 @@
 import sys
+import os
 import pygame as py
 import math
 
-url = "/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/image/"
-
-# url = "F:/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/image/"
+url = os.path.dirname(os.path.abspath(__file__)) + "/image/"
 
 
 class Character(py.sprite.Sprite):
@@ -103,9 +102,8 @@ class Round(py.sprite.Sprite):
         self.obs.append(Obstacle(1030, 330, -5, 1, 0, 0, 1280, 0, 330, 120))
         self.obs.append(Obstacle(770, 120, 5, 1, 0, 0, 1280, 0, 330, 120))
 
-        self.obs.append(Obstacle(1020, 400, 5, -1, 0, 0, 1280, 0, 600, 400))
+        self.obs.append(Obstacle(990, 400, 5, -1, 0, 0, 1280, 0, 600, 400))
         self.obs.append(Obstacle(900, 600, -5, -1, 0, 0, 1280, 0, 600, 400))
-        self.obs.append(Obstacle(950, 400, 5, -1, 0, 0, 1280, 0, 600, 400))
 
         for i in range(0, 5, 1):
             self.coinl.append(Coin(170+i*40, 310))
@@ -116,13 +114,14 @@ class Round(py.sprite.Sprite):
         for i in range(0, 2, 1):
             self.coinl.append(Coin(750, 295+i*170))
 
-        self.size = (0, 0)
-        self.loc = (1080, 255)
+        self.coinl.append(Coin(820, 100))
+        self.coinl.append(Coin(820, 600))
+
         character.startx = 100
         character.starty = 360
         character.rect.x = 100
         character.rect.y = 360
-        self.coin = 10
+        self.coin = 18
         self.get_coin = 0
 
     def round02(self):
@@ -132,15 +131,12 @@ class Round(py.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = round(SCREEN_WIDTH / 2)
         self.rect.centery = round(SCREEN_HEIGHT / 2)
-        obs01 = Obstacle(700, 100, 5)
-        obs02 = Obstacle(500, 565, 5, 100)
-        obs05 = Obstacle(250, 200, 5)
-        obs06 = Obstacle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, -2, 0, 200)
-        obs07 = Obstacle(SCREEN_WIDTH / 2 + 150, SCREEN_HEIGHT / 2, 2, 0, 200)
-        self.obs = [obs01, obs02, obs05]
-        self.obsC = [obs06, obs07]
-        self.size = (110, 110)
-        self.loc = (100, 250)
+        self.obs = []
+        self.obsC = []
+        self.coinl = []
+        self.coinl.append(Coin(1000, 360))
+        self.coin = 1
+        self.get_coin = 0
 
     def round03(self):
         py.sprite.Sprite.__init__(self)
@@ -184,10 +180,10 @@ class Round(py.sprite.Sprite):
         for i in self.obsC:
             i.updateCircle()
 
-        for i in self.obs + self.obsC:
-            if py.sprite.collide_mask(i, character):
-                stage.bool = True
-                character.death += 1
+        # for i in self.obs + self.obsC:
+        #     if py.sprite.collide_mask(i, character):
+        #         stage.bool = True
+        #         character.death += 1
 
         for i in self.coinl:
             if py.sprite.collide_mask(i, character):
@@ -206,19 +202,22 @@ class Round(py.sprite.Sprite):
 
 
 class Endpoint(py.sprite.Sprite):
-    def __init__(self, size, loc):
+    def __init__(self):
         py.sprite.Sprite.__init__(self)
-        self.image = py.image.load(url + "green.png").convert_alpha()
-        self.image = py.transform.scale(self.image, size)
+
+    def round01(self):
+        self.image = py.image.load(url + "map01end.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.x = loc[0]
-        self.rect.y = loc[1]
+
+    def round02(self):
+        self.image = py.image.load(url + "map02end.png").convert_alpha()
+        self.rect = self.image.get_rect()
 
     def update(self):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        screen.blit(self.image, (0, 0))
 
 
-def display_death(back):
+def display_death():
     death = font.render(f"Death : {character.death:,}", True, True)
     screen.blit(death, (5, 5))
 
@@ -244,7 +243,7 @@ clock = py.time.Clock()
 stage = Round()
 
 while True:
-    clock.tick(60)
+    clock.tick(30)
     for event in py.event.get():
         if event.type == py.QUIT:
             sys.exit()
@@ -252,22 +251,24 @@ while True:
     if stage.bool:
         if stage.step == 1:
             stage.round01()
-            endpoint = Endpoint(stage.size, stage.loc)
+            endpoint = Endpoint()
+            endpoint.round01()
             stage.bool = False
 
         elif stage.step == 2:
             stage.round02()
-            endpoint = Endpoint(stage.size, stage.loc)
+            endpoint = Endpoint()
+            endpoint.round02()
             stage.bool = False
 
         elif stage.step == 3:
             stage.round03()
-            endpoint = Endpoint(stage.size, stage.loc)
+            endpoint = Endpoint()
             stage.bool = False
 
         elif stage.step == 4:
             stage.round04()
-            endpoint = Endpoint(stage.size, stage.loc)
+            endpoint = Endpoint()
             stage.bool = False
 
     if py.sprite.collide_mask(character, endpoint) and stage.coin <= stage.get_coin:
@@ -296,5 +297,5 @@ while True:
 
     endpoint.update()
     screen.blit(character.image, character.rect)
-    display_death(white_image)
+    display_death()
     py.display.update()
