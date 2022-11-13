@@ -30,7 +30,7 @@ class Coin(py.sprite.Sprite):
 
 
 class Obstacle(py.sprite.Sprite):
-    def __init__(self, x, y, speed, degrees=0, r=0, k=0, maxx=1280, minx=0, maxy = 720, miny = 0):
+    def __init__(self, x, y, speed, degrees=0, r=0, k=0, maxx=1280, minx=0, maxy=720, miny=0):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "/image/circle_red.png").convert_alpha()
         self.image = py.transform.scale(self.image, (20, 20))
@@ -89,15 +89,15 @@ class Round(py.sprite.Sprite):
         self.obsC = []
         self.coinl = []
         for i in range(0, 5, 1):
-            self.obs.append(Obstacle(170+i*40, 380, 8*(-1)**i, 100, 0, 0, 1280, 0, 450, 310))
+            self.obs.append(Obstacle(170 + i * 40, 380, 8 * (-1) ** i, 100, 0, 0, 1280, 0, 450, 310))
 
         for i in range(0, 4, 1):
             for j in range(0, 4, 1):
-                self.obsC.append(Obstacle(480, 170+i*140, 3, 0, 50, j*90))
+                self.obsC.append(Obstacle(480, 170 + i * 140, 3, 0, 50, j * 90))
 
         for i in range(0, 4, 1):
             for j in range(0, 2, 1):
-                self.obsC.append(Obstacle(750, 375, 3, 0, 40+j*50, i*90))
+                self.obsC.append(Obstacle(750, 375, 3, 0, 40 + j * 50, i * 90))
 
         self.obs.append(Obstacle(900, 120, 5, 1, 0, 0, 1280, 0, 330, 120))
         self.obs.append(Obstacle(1030, 330, -5, 1, 0, 0, 1280, 0, 330, 120))
@@ -107,13 +107,13 @@ class Round(py.sprite.Sprite):
         self.obs.append(Obstacle(900, 600, -5, -1, 0, 0, 1280, 0, 600, 400))
 
         for i in range(0, 5, 1):
-            self.coinl.append(Coin(170+i*40, 310))
+            self.coinl.append(Coin(170 + i * 40, 310))
         for i in range(0, 5, 1):
-            self.coinl.append(Coin(170+i*40, 450))
+            self.coinl.append(Coin(170 + i * 40, 450))
         for i in range(0, 4, 1):
-            self.coinl.append(Coin(480, 170+i*140))
+            self.coinl.append(Coin(480, 170 + i * 140))
         for i in range(0, 2, 1):
-            self.coinl.append(Coin(750, 295+i*170))
+            self.coinl.append(Coin(750, 295 + i * 170))
 
         self.coinl.append(Coin(820, 100))
         self.coinl.append(Coin(820, 600))
@@ -136,21 +136,21 @@ class Round(py.sprite.Sprite):
 
         for i in range(0, 4, 1):
             for j in range(0, 4, 1):
-                self.obsC.append(Obstacle(825, 355, 3, 0, 40+j*50, i*90))
+                self.obsC.append(Obstacle(825, 355, 3, 0, 40 + j * 50, i * 90))
 
         for i in range(0, 2):
-            self.obs.append(Obstacle(190, 120+i*80, 8, 0, 0, 0, 510, 190))
+            self.obs.append(Obstacle(190, 120 + i * 80, 8, 0, 0, 0, 510, 190))
         for i in range(0, 2):
-            self.obs.append(Obstacle(510, 160+i*80, 8, 0, 0, 0, 510, 190))
+            self.obs.append(Obstacle(510, 160 + i * 80, 8, 0, 0, 0, 510, 190))
         for i in range(0, 2):
-            self.obs.append(Obstacle(190, 445+i*80, 8, 0, 0, 0, 510, 190))
+            self.obs.append(Obstacle(190, 445 + i * 80, 8, 0, 0, 0, 510, 190))
         for i in range(0, 2):
-            self.obs.append(Obstacle(510, 485+i*80, 8, 0, 0, 0, 510, 190))
+            self.obs.append(Obstacle(510, 485 + i * 80, 8, 0, 0, 0, 510, 190))
 
         for i in range(0, 2):
-            self.obs.append(Obstacle(110+i*70, 220, 7, 100, 0, 0, 1280, 0, 500, 220))
+            self.obs.append(Obstacle(110 + i * 70, 220, 7, 100, 0, 0, 1280, 0, 500, 220))
         for i in range(0, 2):
-            self.obs.append(Obstacle(145+i*70, 500, 7, 100, 0, 0, 1280, 0, 500, 220))
+            self.obs.append(Obstacle(145 + i * 70, 500, 7, 100, 0, 0, 1280, 0, 500, 220))
 
         self.coinl.append(Coin(1000, 360))
         self.coinl.append(Coin(850, 140))
@@ -214,7 +214,6 @@ class Round(py.sprite.Sprite):
                 self.coinl.remove(i)
                 self.get_coin += 1
 
-
         screen.fill(white)
         screen.blit(self.image, (0, 0))
         screen.blit(self.color, (0, 0))
@@ -254,6 +253,10 @@ class Start(py.sprite.Sprite):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "/image/start.png").convert_alpha()
         self.rect = self.image.get_rect()
+        self.rect.centerx = round(SCREEN_WIDTH / 2)
+        self.rect.centery = round(SCREEN_HEIGHT / 2)
+        screen.blit(self.image, (0, 0))
+
 
 def display_death():
     death = font.render(f"Death : {character.death:,}", True, True)
@@ -278,22 +281,38 @@ bgm = py.mixer.Sound(url + "/music/bgm.mp3")
 clear = py.mixer.Sound(url + "/music/next.mp3")
 die = py.mixer.Sound(url + "/music/die.mp3")
 main_image = py.image.load(url + "/image/main.png").convert_alpha()
-bgm.play(-1)
+screen.blit(main_image, (0, 0))
 
 character = Character()
 clock = py.time.Clock()
 stage = Round()
+start = Start()
 
-while True:
+main = True
+
+while main:
     clock.tick(60)
-    screen.blit(main_image, (0, 0))
-    screen.blit(start_image, (0, 0))
     for event in py.event.get():
+        if event.type == py.QUIT:
+            sys.exit()
+
+        if event.type == py.MOUSEBUTTONDOWN:
+            pos = py.mouse.get_pos()
+            if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
+                start.image = py.transform.scale(start.image, (1216, 684))
+                screen.blit(main_image, (0, 0))
+                screen.blit(start.image, (32, 32))
+
         if event.type == py.MOUSEBUTTONUP:
+            if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
+                start.image = py.transform.scale(start.image, (1280, 720))
+                screen.blit(main_image, (0, 0))
+                screen.blit(start.image, (0, 0))
+                main = False
 
+    py.display.update()
 
-
-
+bgm.play(-1)
 
 while True:
     clock.tick(60)
