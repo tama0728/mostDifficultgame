@@ -282,6 +282,9 @@ clear = py.mixer.Sound(url + "/music/next.mp3")
 die = py.mixer.Sound(url + "/music/die.mp3")
 main_image = py.image.load(url + "/image/main.png").convert_alpha()
 screen.blit(main_image, (0, 0))
+down = py.mixer.Sound(url + "/music/down.mp3")
+up = py.mixer.Sound(url + "/music/up.mp3")
+mainm = py.mixer.Sound(url + "/music/main.mp3")
 
 character = Character()
 clock = py.time.Clock()
@@ -289,6 +292,8 @@ stage = Round()
 start = Start()
 
 main = True
+
+mainm.play(-1)
 
 while main:
     clock.tick(60)
@@ -299,19 +304,21 @@ while main:
         if event.type == py.MOUSEBUTTONDOWN:
             pos = py.mouse.get_pos()
             if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
+                down.play()
                 start.image = py.transform.scale(start.image, (1216, 684))
                 screen.blit(main_image, (0, 0))
                 screen.blit(start.image, (32, 32))
 
         if event.type == py.MOUSEBUTTONUP:
+            start.image = py.transform.scale(start.image, (1280, 720))
+            screen.blit(main_image, (0, 0))
+            screen.blit(start.image, (0, 0))
             if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
-                start.image = py.transform.scale(start.image, (1280, 720))
-                screen.blit(main_image, (0, 0))
-                screen.blit(start.image, (0, 0))
+                up.play()
                 main = False
 
     py.display.update()
-
+mainm.stop()
 bgm.play(-1)
 
 while True:
