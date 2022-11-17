@@ -170,11 +170,44 @@ class Round(py.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = round(SCREEN_WIDTH / 2)
         self.rect.centery = round(SCREEN_HEIGHT / 2)
+        self.coin = 0
         self.obs = []
         self.obsC = []
         self.coinl = []
-        self.coinl.append(Coin(640, 300))
-        self.coin = 1
+        self.obs.append(Obstacle(430, 170,  7, 0, 0, 0, 500, 430))
+        self.obs.append(Obstacle(850, 170, -7, 0, 0, 0, 850, 780))
+        for i in range(0, 2):
+            self.obs.append(Obstacle(500, 100 + i * 100, -10, 0, 0, 0, 780, 500))
+            self.coinl.append(Coin(500, 100 + i * 100))
+            self.coinl.append(Coin(780, 100 + i * 100))
+            self.coin += 2
+        for i in range(0, 2):
+            self.obs.append(Obstacle(780, 150 + i * 100,  10, 0, 0, 0, 780, 500))
+            self.coinl.append(Coin(500, 150 + i * 100))
+            self.coinl.append(Coin(780, 150 + i * 100))
+            self.coin += 2
+
+        for i in range(0, 4):
+            for j in range(0, 4, 1):
+                self.obsC.append(Obstacle(410 + i * 150, 330, -7, 0, 50, j * 90))
+            self.coinl.append(Coin(410 + i * 150, 330))
+            self.coin += 1
+
+        for i in range(0, 3):
+            self.obs.append(Obstacle(440 + i * 200, 400,  10, 100, 0, 0, 1280, 0, 600, 400))
+            self.coinl.append(Coin(440 + i * 200, 400))
+            self.coinl.append(Coin(440 + i * 200, 600))
+            self.coin += 2
+
+        for i in range(0, 2):
+            self.obs.append(Obstacle(540 + i * 200, 600, -10, 100, 0, 0, 1280, 0, 600, 400))
+            self.coinl.append(Coin(540 + i * 200, 400))
+            self.coinl.append(Coin(540 + i * 200, 600))
+            self.coin += 2
+
+        self.coinl.append(Coin(640, 250))
+        self.coinl.append(Coin(640, 150))
+        self.coin += 2
         self.get_coin = 0
         character.rect.x = 355
         character.rect.y = 170
