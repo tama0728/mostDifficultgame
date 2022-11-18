@@ -3,7 +3,7 @@ import os
 import pygame as py
 import math
 
-url = os.path.dirname(os.path.abspath(__file__))
+url = (os.path.sep.join(sys.argv[0].split(os.path.sep)[:-1]))
 
 
 class Character(py.sprite.Sprite):
@@ -57,8 +57,8 @@ class Obstacle(py.sprite.Sprite):
         else:
             self.rect.centerx += self.speed
             self.rect.centery += self.speed * self.degrees
-        if py.sprite.collide_mask(self, back):
-            self.speed *= -1
+        # if py.sprite.collide_mask(self, back):
+        #     self.speed *= -1
         if self.rect.centerx > self.maxx or self.rect.centerx < self.minx or self.rect.centery > self.maxy or self.rect.centery < self.miny:
             self.speed *= -1
 
@@ -73,7 +73,7 @@ class Obstacle(py.sprite.Sprite):
 class Round(py.sprite.Sprite):
     def __init__(self):
         py.sprite.Sprite.__init__(self)
-        self.step = 1
+        self.step = 4
         self.bool = True
         self.coin = 0
         self.get_coin = 0
@@ -189,7 +189,7 @@ class Round(py.sprite.Sprite):
 
         for i in range(0, 4):
             for j in range(0, 4, 1):
-                self.obsC.append(Obstacle(410 + i * 150, 330, -7, 0, 50, j * 90))
+                self.obsC.append(Obstacle(410 + i * 150, 330, -6, 0, 50, j * 90))
             self.coinl.append(Coin(410 + i * 150, 330))
             self.coin += 1
 
@@ -223,9 +223,33 @@ class Round(py.sprite.Sprite):
         self.obsC = []
         self.coinl = []
         self.coin = 0
+        for i in range(0, 3):
+            for j in range(0, 6):
+                self.obsC.append(Obstacle(640, 320, -2, 0, 80 + i * 50, j * 60))
+        self.coinl.append(Coin(640, 160))
+        self.coinl.append(Coin(640, 480))
+        self.coin += 2
+        for i in range(0, 5):
+            self.obs.append(Obstacle(260, 140 + i * 120,  10, 0, 0, 0, 480, 260))
+            self.obs.append(Obstacle(1000, 140 + i * 120, -10, 0, 0, 0, 1000, 780))
+            self.coinl.append(Coin(280, 140 + i * 120))
+            self.coinl.append(Coin(480, 140 + i * 120))
+            self.coinl.append(Coin(980, 140 + i * 120))
+            self.coinl.append(Coin(780, 140 + i * 120))
+            self.coin += 4
+        for i in range(0, 4):
+            self.obs.append(Obstacle(480, 200 + i * 120, -10, 0, 0, 0, 480, 260))
+            self.obs.append(Obstacle(780, 200 + i * 120,  10, 0, 0, 0, 1000, 780))
+            self.coinl.append(Coin(480, 200 + i * 120))
+            self.coinl.append(Coin(280, 200 + i * 120))
+            self.coinl.append(Coin(780, 200 + i * 120))
+            self.coinl.append(Coin(980, 200 + i * 120))
+            self.coin += 4
+
+        self.coinl.append(Coin(640, 320))
         self.get_coin = 0
-        character.rect.x = 640
-        character.rect.y = 360
+        character.rect.x = 155
+        character.rect.y = 270
 
     def update(self, map):
 
@@ -326,36 +350,36 @@ start = Start()
 
 main = True
 
-mainm.play(-1)
+# mainm.play(-1)
 
-while main:
-    clock.tick(60)
-    for event in py.event.get():
-        if event.type == py.QUIT:
-            sys.exit()
-
-        if event.type == py.MOUSEBUTTONDOWN:
-            pos = py.mouse.get_pos()
-            if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
-                down.play()
-                start.image = py.transform.scale(start.image, (1216, 684))
-                screen.blit(main_image, (0, 0))
-                screen.blit(start.image, (32, 32))
-
-        if event.type == py.MOUSEBUTTONUP:
-            start.image = py.transform.scale(start.image, (1280, 720))
-            screen.blit(main_image, (0, 0))
-            screen.blit(start.image, (0, 0))
-            if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
-                up.play()
-                main = False
-
-    py.display.update()
-mainm.stop()
-bgm.play(-1)
+# while main:
+#     clock.tick(60)
+#     for event in py.event.get():
+#         if event.type == py.QUIT:
+#             sys.exit()
+#
+#         if event.type == py.MOUSEBUTTONDOWN:
+#             pos = py.mouse.get_pos()
+#             if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
+#                 down.play()
+#                 start.image = py.transform.scale(start.image, (1216, 684))
+#                 screen.blit(main_image, (0, 0))
+#                 screen.blit(start.image, (32, 32))
+#
+#         if event.type == py.MOUSEBUTTONUP:
+#             start.image = py.transform.scale(start.image, (1280, 720))
+#             screen.blit(main_image, (0, 0))
+#             screen.blit(start.image, (0, 0))
+#             if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
+#                 up.play()
+#                 main = False
+#
+#     py.display.update()
+# mainm.stop()
+# bgm.play(-1)
 
 while True:
-    clock.tick(60)
+    clock.tick(30)
     for event in py.event.get():
         if event.type == py.QUIT:
             sys.exit()
