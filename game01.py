@@ -73,7 +73,7 @@ class Obstacle(py.sprite.Sprite):
 class Round(py.sprite.Sprite):
     def __init__(self):
         py.sprite.Sprite.__init__(self)
-        self.step = 4
+        self.step = 1
         self.bool = True
         self.coin = 0
         self.get_coin = 0
@@ -122,6 +122,8 @@ class Round(py.sprite.Sprite):
         character.rect.y = 360
         self.coin = 18
         self.get_coin = 0
+        self.coin = 1
+
 
     def round02(self):
         py.sprite.Sprite.__init__(self)
@@ -162,6 +164,8 @@ class Round(py.sprite.Sprite):
         self.get_coin = 0
         character.rect.x = 1150
         character.rect.y = 360
+        self.coin = 1
+
 
     def round03(self):
         py.sprite.Sprite.__init__(self)
@@ -211,6 +215,8 @@ class Round(py.sprite.Sprite):
         self.get_coin = 0
         character.rect.x = 355
         character.rect.y = 170
+        self.coin = 1
+
 
     def round04(self):
         py.sprite.Sprite.__init__(self)
@@ -247,9 +253,45 @@ class Round(py.sprite.Sprite):
             self.coin += 4
 
         self.coinl.append(Coin(640, 320))
+        self.coin = 1
         self.get_coin = 0
         character.rect.x = 155
         character.rect.y = 270
+
+    def clear(self):
+        py.sprite.Sprite.__init__(self)
+        self.image = py.image.load(url + "/image/map02.png").convert_alpha()
+        self.color = py.image.load(url + "/image/map02c.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.centerx = round(SCREEN_WIDTH / 2)
+        self.rect.centery = round(SCREEN_HEIGHT / 2)
+        screen.fill(white)
+        screen.blit(self.image, (0, 0))
+        screen.blit(self.color, (0, 0))
+        main = True
+        while main:
+            clock.tick(60)
+            for event in py.event.get():
+                if event.type == py.QUIT:
+                    sys.exit()
+
+                if event.type == py.MOUSEBUTTONDOWN:
+                    pos = py.mouse.get_pos()
+                    if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
+                        down.play()
+                        start.image = py.transform.scale(start.image, (1216, 684))
+                        screen.blit(self.image, (0, 0))
+                        screen.blit(start.image, (32, 32))
+
+                if event.type == py.MOUSEBUTTONUP:
+                    start.image = py.transform.scale(start.image, (1280, 720))
+                    screen.blit(self.image, (0, 0))
+                    screen.blit(start.image, (0, 0))
+                    if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
+                        up.play()
+                        main = False
+
+            py.display.update()
 
     def update(self, map):
 
@@ -259,11 +301,11 @@ class Round(py.sprite.Sprite):
         for i in self.obsC:
             i.updateCircle()
 
-        for i in self.obs + self.obsC:
-            if py.sprite.collide_mask(i, character):
-                die.play()
-                stage.bool = True
-                character.death += 1
+        # for i in self.obs + self.obsC:
+        #     if py.sprite.collide_mask(i, character):
+        #         die.play()
+        #         stage.bool = True
+        #         character.death += 1
 
         for i in self.coinl:
             if py.sprite.collide_mask(i, character):
@@ -325,116 +367,121 @@ SCREEN_HEIGHT = 720
 
 white = (0xff, 0xff, 0xff)
 black = (0, 0, 0)
-x = True
-y = False
 k = 0
 
 py.init()
+clock = py.time.Clock()
 font = py.font.SysFont("arial", 25)
-py.display.set_caption("1")
+py.display.set_caption("개(발자도)어려운 게임")
 screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+main_image = py.image.load(url + "/image/main.png").convert_alpha()
 coin_sound = py.mixer.Sound(url + "/music/coin.mp3")
 bgm = py.mixer.Sound(url + "/music/bgm.mp3")
 clear = py.mixer.Sound(url + "/music/next.mp3")
 die = py.mixer.Sound(url + "/music/die.mp3")
-main_image = py.image.load(url + "/image/main.png").convert_alpha()
-screen.blit(main_image, (0, 0))
 down = py.mixer.Sound(url + "/music/down.mp3")
 up = py.mixer.Sound(url + "/music/up.mp3")
 mainm = py.mixer.Sound(url + "/music/main.mp3")
 
-character = Character()
-clock = py.time.Clock()
-stage = Round()
-start = Start()
-
-main = True
-
-# mainm.play(-1)
-
-# while main:
-#     clock.tick(60)
-#     for event in py.event.get():
-#         if event.type == py.QUIT:
-#             sys.exit()
-#
-#         if event.type == py.MOUSEBUTTONDOWN:
-#             pos = py.mouse.get_pos()
-#             if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
-#                 down.play()
-#                 start.image = py.transform.scale(start.image, (1216, 684))
-#                 screen.blit(main_image, (0, 0))
-#                 screen.blit(start.image, (32, 32))
-#
-#         if event.type == py.MOUSEBUTTONUP:
-#             start.image = py.transform.scale(start.image, (1280, 720))
-#             screen.blit(main_image, (0, 0))
-#             screen.blit(start.image, (0, 0))
-#             if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
-#                 up.play()
-#                 main = False
-#
-#     py.display.update()
-# mainm.stop()
-# bgm.play(-1)
-
 while True:
-    clock.tick(30)
-    for event in py.event.get():
-        if event.type == py.QUIT:
-            sys.exit()
-
-    if stage.bool:
-        if stage.step == 1:
-            stage.round01()
-            endpoint = Endpoint()
-            endpoint.round01()
-            stage.bool = False
-
-        elif stage.step == 2:
-            stage.round02()
-            endpoint = Endpoint()
-            endpoint.round02()
-            stage.bool = False
-
-        elif stage.step == 3:
-            stage.round03()
-            endpoint = Endpoint()
-            endpoint.round03()
-            stage.bool = False
-
-        elif stage.step == 4:
-            stage.round04()
-            endpoint = Endpoint()
-            endpoint.round04()
-            stage.bool = False
-
-    if py.sprite.collide_mask(character, endpoint) and stage.coin <= stage.get_coin:
-        clear.play()
-        stage.step += 1
-        stage.bool = True
-
-    stage.update(stage)
-    key_event = py.key.get_pressed()
-    if not py.sprite.collide_mask(stage, character):
-        if key_event[py.K_LEFT]:
-            character.rect.x -= 5
-            if py.sprite.collide_mask(stage, character):
-                character.rect.x += 5
-        if key_event[py.K_RIGHT]:
-            character.rect.x += 5
-            if py.sprite.collide_mask(stage, character):
-                character.rect.x -= 5
-        if key_event[py.K_UP]:
-            character.rect.y -= 5
-            if py.sprite.collide_mask(stage, character):
-                character.rect.y += 5
-        if key_event[py.K_DOWN]:
-            character.rect.y += 5
-            if py.sprite.collide_mask(stage, character):
-                character.rect.y -= 5
-
-    endpoint.update()
-    screen.blit(character.image, character.rect)
-    display_death()
+    screen.blit(main_image, (0, 0))
+    character = Character()
+    stage = Round()
+    start = Start()
     py.display.update()
+
+    main = True
+
+    mainm.play(-1)
+
+    while main:
+        clock.tick(60)
+        for event in py.event.get():
+            if event.type == py.QUIT:
+                sys.exit()
+
+            if event.type == py.MOUSEBUTTONDOWN:
+                pos = py.mouse.get_pos()
+                if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
+                    down.play()
+                    start.image = py.transform.scale(start.image, (1216, 684))
+                    screen.blit(main_image, (0, 0))
+                    screen.blit(start.image, (32, 32))
+
+            if event.type == py.MOUSEBUTTONUP:
+                start.image = py.transform.scale(start.image, (1280, 720))
+                screen.blit(main_image, (0, 0))
+                screen.blit(start.image, (0, 0))
+                if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
+                    up.play()
+                    main = False
+
+        py.display.update()
+    mainm.stop()
+    bgm.play(-1)
+
+    while True:
+        clock.tick(120)
+        for event in py.event.get():
+            if event.type == py.QUIT:
+                sys.exit()
+
+        if stage.bool:
+            if stage.step == 1:
+                stage.round01()
+                endpoint = Endpoint()
+                endpoint.round01()
+                stage.bool = False
+
+            elif stage.step == 2:
+                stage.round02()
+                endpoint = Endpoint()
+                endpoint.round02()
+                stage.bool = False
+
+            elif stage.step == 3:
+                stage.round03()
+                endpoint = Endpoint()
+                endpoint.round03()
+                stage.bool = False
+
+            elif stage.step == 4:
+                stage.round04()
+                endpoint = Endpoint()
+                endpoint.round04()
+                stage.bool = False
+
+            elif stage.step == 5:
+                stage.clear()
+                break
+
+        if py.sprite.collide_mask(character, endpoint) and stage.coin <= stage.get_coin:
+            clear.play()
+            stage.step += 1
+            stage.bool = True
+
+        stage.update(stage)
+        key_event = py.key.get_pressed()
+        if not py.sprite.collide_mask(stage, character):
+            if key_event[py.K_LEFT]:
+                character.rect.x -= 5
+                if py.sprite.collide_mask(stage, character):
+                    character.rect.x += 5
+            if key_event[py.K_RIGHT]:
+                character.rect.x += 5
+                if py.sprite.collide_mask(stage, character):
+                    character.rect.x -= 5
+            if key_event[py.K_UP]:
+                character.rect.y -= 5
+                if py.sprite.collide_mask(stage, character):
+                    character.rect.y += 5
+            if key_event[py.K_DOWN]:
+                character.rect.y += 5
+                if py.sprite.collide_mask(stage, character):
+                    character.rect.y -= 5
+
+        endpoint.update()
+        screen.blit(character.image, character.rect)
+        display_death()
+        py.display.update()
+
