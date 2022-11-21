@@ -26,7 +26,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='game01',
+    name='game',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -46,11 +46,11 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='game01',
+    name='game',
 )
 app = BUNDLE(
     coll,
-    name='game01.app',
-    icon=None,
+    name='game.app',
+    icon='image/ss.icns',
     bundle_identifier=None,
 )

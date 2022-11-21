@@ -1,4 +1,4 @@
-('/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/game01.pkg',
+('/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/game.pkg',
  {'BINARY': 1,
   'DATA': 1,
   'EXECUTABLE': 1,

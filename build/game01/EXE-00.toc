@@ -1,4 +1,4 @@
-('/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/game01',
+('/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/game',
  False,
  False,
  True,
@@ -13,7 +13,7 @@
  'arm64',
  None,
  None,
- '/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/game01.pkg',
+ '/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/game.pkg',
  [('PYZ-00.pyz',
    '/Users/gimdong-yun/Desktop/SynologyDrive/F/ShortCut/Uni/2022/2학기/알고리즘과게임콘텐츠/팀플/code/build/game01/PYZ-00.pyz',
    'PYZ'),
@@ -62,7 +62,7 @@
  [],
  False,
  False,
- 1668785969,
+ 1669015025,
  [('runw',
    '/Users/gimdong-yun/miniforge3/lib/python3.9/site-packages/PyInstaller/bootloader/Darwin-64bit/runw',
    'EXECUTABLE')])
