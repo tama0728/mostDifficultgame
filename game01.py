@@ -57,8 +57,7 @@ class Obstacle(py.sprite.Sprite):
         else:
             self.rect.centerx += self.speed
             self.rect.centery += self.speed * self.degrees
-        # if py.sprite.collide_mask(self, back):
-        #     self.speed *= -1
+
         if self.rect.centerx > self.maxx or self.rect.centerx < self.minx or self.rect.centery > self.maxy or self.rect.centery < self.miny:
             self.speed *= -1
 
@@ -122,8 +121,7 @@ class Round(py.sprite.Sprite):
         character.rect.y = 360
         self.coin = 18
         self.get_coin = 0
-        self.coin = 1
-
+        # self.coin = 1
 
     def round02(self):
         py.sprite.Sprite.__init__(self)
@@ -164,7 +162,7 @@ class Round(py.sprite.Sprite):
         self.get_coin = 0
         character.rect.x = 1150
         character.rect.y = 360
-        self.coin = 1
+        # self.coin = 1
 
 
     def round03(self):
@@ -215,7 +213,7 @@ class Round(py.sprite.Sprite):
         self.get_coin = 0
         character.rect.x = 355
         character.rect.y = 170
-        self.coin = 1
+        # self.coin = 1
 
 
     def round04(self):
@@ -253,21 +251,24 @@ class Round(py.sprite.Sprite):
             self.coin += 4
 
         self.coinl.append(Coin(640, 320))
-        self.coin = 1
+        # self.coin = 1
         self.get_coin = 0
         character.rect.x = 155
         character.rect.y = 270
 
     def clear(self):
         py.sprite.Sprite.__init__(self)
-        self.image = py.image.load(url + "/image/map02.png").convert_alpha()
-        self.color = py.image.load(url + "/image/map02c.png").convert_alpha()
+        clearm = py.mixer.Sound(url + "/music/clear.mp3")
+        self.image = py.image.load(url + "/image/end.png").convert_alpha()
+        self.restart = py.image.load(url + "/image/restart.png").convert_alpha()
+        self.restarts = py.transform.scale(self.restart, (1216, 684))
         self.rect = self.image.get_rect()
         self.rect.centerx = round(SCREEN_WIDTH / 2)
         self.rect.centery = round(SCREEN_HEIGHT / 2)
         screen.fill(white)
         screen.blit(self.image, (0, 0))
-        screen.blit(self.color, (0, 0))
+        screen.blit(self.restart, (430, 70))
+        clearm.play()
         main = True
         while main:
             clock.tick(60)
@@ -277,18 +278,17 @@ class Round(py.sprite.Sprite):
 
                 if event.type == py.MOUSEBUTTONDOWN:
                     pos = py.mouse.get_pos()
-                    if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
+                    if 474 + 430 <= pos[0] <= 474 + 430 + 332 and 490 + 70 <= pos[1] <= 490 + 70 + 88:
                         down.play()
-                        start.image = py.transform.scale(start.image, (1216, 684))
                         screen.blit(self.image, (0, 0))
-                        screen.blit(start.image, (32, 32))
+                        screen.blit(self.restarts, (462, 102))
 
                 if event.type == py.MOUSEBUTTONUP:
-                    start.image = py.transform.scale(start.image, (1280, 720))
                     screen.blit(self.image, (0, 0))
-                    screen.blit(start.image, (0, 0))
-                    if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
+                    screen.blit(self.restart, (430, 70))
+                    if 474 + 430 <= event.pos[0] <= 474 + 430 + 332 and 490 + 70 <= event.pos[1] <= 490 + 70 + 88:
                         up.play()
+                        clearm.stop()
                         main = False
 
             py.display.update()
@@ -301,11 +301,11 @@ class Round(py.sprite.Sprite):
         for i in self.obsC:
             i.updateCircle()
 
-        # for i in self.obs + self.obsC:
-        #     if py.sprite.collide_mask(i, character):
-        #         die.play()
-        #         stage.bool = True
-        #         character.death += 1
+        for i in self.obs + self.obsC:
+            if py.sprite.collide_mask(i, character):
+                die.play()
+                stage.bool = True
+                character.death += 1
 
         for i in self.coinl:
             if py.sprite.collide_mask(i, character):
@@ -351,6 +351,7 @@ class Start(py.sprite.Sprite):
     def __init__(self):
         py.sprite.Sprite.__init__(self)
         self.image = py.image.load(url + "/image/start.png").convert_alpha()
+        self.images = py.transform.scale(self.image, (1216, 684))
         self.rect = self.image.get_rect()
         self.rect.centerx = round(SCREEN_WIDTH / 2)
         self.rect.centery = round(SCREEN_HEIGHT / 2)
@@ -395,7 +396,7 @@ while True:
     mainm.play(-1)
 
     while main:
-        clock.tick(60)
+        clock.tick(30)
         for event in py.event.get():
             if event.type == py.QUIT:
                 sys.exit()
@@ -404,12 +405,10 @@ while True:
                 pos = py.mouse.get_pos()
                 if 474 <= pos[0] <= 474 + 332 and 490 <= pos[1] <= 490 + 88:
                     down.play()
-                    start.image = py.transform.scale(start.image, (1216, 684))
                     screen.blit(main_image, (0, 0))
-                    screen.blit(start.image, (32, 32))
+                    screen.blit(start.images, (32, 32))
 
             if event.type == py.MOUSEBUTTONUP:
-                start.image = py.transform.scale(start.image, (1280, 720))
                 screen.blit(main_image, (0, 0))
                 screen.blit(start.image, (0, 0))
                 if 474 <= event.pos[0] <= 474 + 332 and 490 <= event.pos[1] <= 490 + 88:
@@ -421,16 +420,16 @@ while True:
     bgm.play(-1)
 
     while True:
-        clock.tick(120)
+        clock.tick(30)
         for event in py.event.get():
             if event.type == py.QUIT:
                 sys.exit()
 
         if stage.bool:
             if stage.step == 1:
-                stage.round01()
                 endpoint = Endpoint()
                 endpoint.round01()
+                stage.round01()
                 stage.bool = False
 
             elif stage.step == 2:
@@ -452,6 +451,7 @@ while True:
                 stage.bool = False
 
             elif stage.step == 5:
+                bgm.stop()
                 stage.clear()
                 break
 
@@ -460,7 +460,6 @@ while True:
             stage.step += 1
             stage.bool = True
 
-        stage.update(stage)
         key_event = py.key.get_pressed()
         if not py.sprite.collide_mask(stage, character):
             if key_event[py.K_LEFT]:
@@ -480,6 +479,7 @@ while True:
                 if py.sprite.collide_mask(stage, character):
                     character.rect.y -= 5
 
+        stage.update(stage)
         endpoint.update()
         screen.blit(character.image, character.rect)
         display_death()
