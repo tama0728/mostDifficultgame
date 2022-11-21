@@ -371,6 +371,8 @@ black = (0, 0, 0)
 k = 0
 
 py.init()
+icon = py.image.load(url + "/image/sumong.png")
+py.display.set_icon(icon)
 clock = py.time.Clock()
 font = py.font.SysFont("arial", 25)
 py.display.set_caption("개(발자도)어려운 게임")
